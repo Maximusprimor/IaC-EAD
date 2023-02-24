@@ -1,0 +1,23 @@
+- hosts: all
+  vars:
+    ansible_connection: winrm
+    ansible_winrm_transport: kerberos
+    ansible_winrm_kerberos_delegation: true
+    ansible_user: adminuser
+    ansible_password: Password123!
+    ansible_port: 5986
+  tasks:
+  - name: IIS installation
+    win_feature:
+      name: Web-Server
+      state: present
+  - name: Enabling firewall ports
+    win_firewall_rule:
+      name: "Allow RDP"
+      localport: "3389"
+      direction: "in"
+      action: "allow"
+      state: "enabled"
+      profile: "any"
+  - name: Enabling WinRM remote access
+    win_command: winrm quickconfig -q

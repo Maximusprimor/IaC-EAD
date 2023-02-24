@@ -1,0 +1,10 @@
+all:
+  hosts:
+    <public_ip_address>:
+  vars:
+    ansible_connection: winrm
+    ansible_winrm_transport: kerberos
+    ansible_winrm_kerberos_delegation: true
+    ansible_user: adminuser
+    ansible_password: Password123!
+    ansible_port: 5986
