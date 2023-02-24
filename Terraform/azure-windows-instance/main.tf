@@ -3,8 +3,8 @@ resource "azurerm_windows_virtual_machine" "vm" {
   location              = var.location
   resource_group_name   = var.resource_group_name
   size                  = var.vm_size
-  admin_username        = "admin"
-  admin_password        = "Fab1234"
+  admin_username        = "eadadm"
+  admin_password        = "Fab12345"
   network_interface_ids = [azurerm_network_interface.nic.id]
   computer_name         = var.vm_name
   source_image_reference {
@@ -16,7 +16,7 @@ resource "azurerm_windows_virtual_machine" "vm" {
   os_disk {
     name              = "${var.vm_name}-osdisk"
     caching           = "ReadWrite"
-    storage_account_type = "Standard_LRS"
+    storage_account_type = var.disk_type
   }
 }
 
@@ -41,7 +41,15 @@ resource "azurerm_subnet" "subnet" {
 
 resource "azurerm_virtual_network" "vnet" {
   name                = "${var.vm_name}-vnet"
+  location            = var.location
   resource_group_name = var.resource_group_name
   address_space       = ["10.0.0.0/16"]
+}
+
+resource "azurerm_public_ip" "vm_public_ip" {
+  name                = "${var.vm_name}-pubip"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  allocation_method   = "Static"
 }
 

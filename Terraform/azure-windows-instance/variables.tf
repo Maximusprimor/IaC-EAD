@@ -13,3 +13,7 @@ variable "vm_name" {
 variable "vm_size" {
   type = string
 }
+
+variable "disk_type" {
+  type = string
+}
