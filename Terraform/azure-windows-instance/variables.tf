@@ -1,15 +1,15 @@
 variable "resource_group_name" {
-  type = "ead_unyleya"
+  type = string
 }
 
 variable "location" {
-  type = "East US"
+  type = string
 }
 
 variable "vm_name" {
-  type = "Atv4_WinServer2019"
+  type = string
 }
 
 variable "vm_size" {
-  type = "B1s"
+  type = string
 }
