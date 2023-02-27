@@ -54,6 +54,13 @@ resource "azurerm_network_security_group" "nsg" {
   }
 }
 
+resource "azurerm_public_ip" "vm_public_ip" {
+  name                = "${var.vm_name}-pubip"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  allocation_method   = "Dynamic"
+}
+
 resource "azurerm_network_interface" "nic" {
   name                = "${var.vm_name}-nic"
   location            = var.location
@@ -63,19 +70,13 @@ resource "azurerm_network_interface" "nic" {
     name                          = "${var.vm_name}-ip"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.vm_public_ip.id
   }
 }
 
 resource "azurerm_network_interface_security_group_association" "isga" {
   network_interface_id      = azurerm_network_interface.nic.id
   network_security_group_id = azurerm_network_security_group.nsg.id
-}
-
-resource "azurerm_public_ip" "vm_public_ip" {
-  name                = "${var.vm_name}-pubip"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  allocation_method   = "Static"
 }
 
 resource "azurerm_windows_virtual_machine" "vm" {
