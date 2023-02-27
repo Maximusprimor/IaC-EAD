@@ -28,9 +28,22 @@ resource "azurerm_network_security_group" "nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+  
+  security_rule {
+    name                       = "allow-rdp"
+    priority                   = 3000
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "3389"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
   security_rule {
     name                       = "allow-icmp"
-    priority                   = 3000
+    priority                   = 3010
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Icmp"
@@ -62,7 +75,7 @@ resource "azurerm_public_ip" "vm_public_ip" {
   name                = "${var.vm_name}-pubip"
   location            = var.location
   resource_group_name = var.resource_group_name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
 }
 
 resource "azurerm_windows_virtual_machine" "vm" {
