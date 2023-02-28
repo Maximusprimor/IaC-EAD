@@ -89,30 +89,3 @@ resource "azurerm_windows_virtual_machine" "vm" {
     storage_account_type = var.disk_type
   }
 }
-
-resource "azurerm_virtual_machine_extension" "ccwh" {
-  name                 = "command-custom_winrm"
-  virtual_machine_id   = azurerm_windows_virtual_machine.vm.id
-  publisher            = "Microsoft.Compute"
-  type                 = "CustomScriptExtension"
-  type_handler_version = "1.9"
-
-  settings = <<SETTINGS
-    {
-        "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -Command \"
-            # Comando 1
-            $url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
-
-            # Comando 2
-            $file = "\ConfigureRemotingForAnsible.ps1"
-
-            # Comando 3
-            (New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
-
-            # Comando 3
-            powershell.exe -ExecutionPolicy ByPass -File $file
-        \""
-    }
-SETTINGS
-
-}
