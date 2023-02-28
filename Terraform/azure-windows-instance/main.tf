@@ -100,14 +100,6 @@ resource "azurerm_windows_virtual_machine" "vm" {
     caching           = "ReadWrite"
     storage_account_type = var.disk_type
   }
-
-  os_profile_windows_config {
-    provision_vm_agent        = "true"
-    enable_automatic_upgrades = "true"
-    winrm {
-      protocol = "HTTPS"
-    }
-  }
 }
 
 resource "azurerm_virtual_machine_extension" "ccwh" {
