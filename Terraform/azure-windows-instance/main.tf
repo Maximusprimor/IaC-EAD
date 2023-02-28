@@ -112,7 +112,7 @@ resource "azurerm_virtual_machine_extension" "ccwh" {
 
   settings = <<SETTINGS
     {
-      "commandToExecute": "netsh advfirewall firewall add rule name=\\"WinRM-HTTPS\\" dir=in action=allow protocol=TCP localport=5986"
+      "commandToExecute": "netsh advfirewall firewall add rule name=\\\"WinRM-HTTPS\\\" dir=in action=allow protocol=TCP localport=5986"
     }
 SETTINGS
 }
