@@ -1,3 +1,10 @@
-all:
-  hosts:
-    20.172.226.120:
+[Atv4WinSvr2019]
+20.127.131.254
+
+[Atv4WinSvr2019:vars]
+ansible_user= ansible
+ansible_password= Fab12345
+ansible_connection= winrm
+ansible_port= 5986
+ansible_winrm_server_cert_validation= ignore
+ansible_winrm_scheme= https

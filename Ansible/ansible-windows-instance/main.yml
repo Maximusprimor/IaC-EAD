@@ -1,16 +1,14 @@
-- hosts: all
-  vars:
-    ansible_connection: winrm
-    ansible_user: eadadm
-    ansible_password: Fab12345
-    ansible_winrm_server_cert_validation: ignore
-    ansible_port: 5986
-    ansible_winrm_transport: ssl
-    ansible_winrm_scheme: https
-    ansible_winrm_ssl_cert_validation: ignore
+---
+- name: Windows EAD 
+  hosts: Atv4WinSvr2019
+  gather_facts: true
 
   tasks:
-  - name: IIS installation
-    win_feature:
-      name: Web-Server
-      state: present
+# Install and enable IIS on Windows server 2019
+    - name: Install IIS
+      win_feature:
+        name: "Web-Server"
+        state: present
+        restart: yes
+        include_sub_features: yes
+        include_management_tools: yes
