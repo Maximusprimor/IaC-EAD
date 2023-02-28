@@ -104,7 +104,7 @@ resource "azurerm_windows_virtual_machine" "vm" {
 
 resource "azurerm_virtual_machine_extension" "ccwh" {
   name                       = "customCommandWinrmHttps"
-  virtual_machine_id         = azurerm_virtual_machine.vm.id
+  virtual_machine_id         = azurerm_windows_virtual_machine.vm.id
   publisher                  = "Microsoft.Compute"
   type                       = "CustomScriptExtension"
   type_handler_version       = "1.9"
