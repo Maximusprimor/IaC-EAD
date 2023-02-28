@@ -31,24 +31,12 @@ resource "azurerm_network_security_group" "nsg" {
   
   security_rule {
     name                       = "allow-rdp"
-    priority                   = 3000
+    priority                   = 110
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "3389"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "allow-icmp"
-    priority                   = 3010
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Icmp"
-    source_port_range          = "*"
-    destination_port_range     = "*"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -103,16 +91,28 @@ resource "azurerm_windows_virtual_machine" "vm" {
 }
 
 resource "azurerm_virtual_machine_extension" "ccwh" {
-  name                       = "customCommandWinrmHttps"
-  virtual_machine_id         = azurerm_windows_virtual_machine.vm.id
-  publisher                  = "Microsoft.Compute"
-  type                       = "CustomScriptExtension"
-  type_handler_version       = "1.9"
-  auto_upgrade_minor_version = true
+  name                 = "command-custom_winrm"
+  virtual_machine_id   = azurerm_windows_virtual_machine.vm.id
+  publisher            = "Microsoft.Compute"
+  type                 = "CustomScriptExtension"
+  type_handler_version = "1.9"
 
   settings = <<SETTINGS
     {
-      "commandToExecute": "netsh advfirewall firewall add rule name=\\\"WinRM-HTTPS\\\" dir=in action=allow protocol=TCP localport=5986"
+        "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -Command \"
+            # Comando 1
+            $url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
+
+            # Comando 2
+            $file = "\ConfigureRemotingForAnsible.ps1"
+
+            # Comando 3
+            (New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
+
+            # Comando 3
+            powershell.exe -ExecutionPolicy ByPass -File $file
+        \""
     }
 SETTINGS
+
 }
