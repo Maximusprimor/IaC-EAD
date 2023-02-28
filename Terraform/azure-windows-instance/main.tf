@@ -116,39 +116,3 @@ resource "azurerm_virtual_machine_extension" "ccwh" {
     }
 SETTINGS
 }
-
-resource "tls_private_key" "tpk" {
-  algorithm   = "RSA"
-  rsa_bits    = 2048
-}
-
-resource "tls_locally_signed_cert" "tlsc" {
-  key_algorithm   = "RSA"
-  private_key_pem = tls_private_key.tpk.private_key_pem
-
-  subject {
-    common_name  = "eadteste.com"
-    organization = "eadteste"
-  }
-
-  validity_period_hours = 8760 # 1 year
-}
-
-resource "azurerm_virtual_machine_extension" "ccic" {
-  name                 = "install-certificate"
-  virtual_machine_id   = azurerm_virtual_machine.vm.id
-  publisher            = "Microsoft.Compute"
-  type                 = "CustomScriptExtension"
-  type_handler_version = "1.9"
-
-  settings = jsonencode({
-    "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File ${path.module}/install_certificate.ps1"
-  })
-
-  protected_settings = jsonencode({
-    "script": base64encode(templatefile("${path.module}/install_certificate.ps1.tpl", {
-      certificate_pem = tls_locally_signed_cert.example.cert_pem
-      private_key_pem  = tls_private_key.example.private_key_pem
-    }))
-  })
-}
